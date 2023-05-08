@@ -20,9 +20,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: BlocProvider(
-      create: (context) => MainBloc(),
-        child:  MyHomePage(),
+        create: (context) => MainBloc(),
+        child: const MyHomePage(),
       ),
     );
   }
-} 
+}

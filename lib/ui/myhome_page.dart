@@ -1,5 +1,4 @@
 import 'package:bloc_mvvm_poc_app/bloc/main_bloc.dart';
-import 'package:bloc_mvvm_poc_app/models/user_models.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,16 +12,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  MainBloc? _bloc = MainBloc();
+  final MainBloc _bloc = MainBloc();
 
   @override
   void initState() {
     // TODO: implement initState
-    // BlocProvider.of<MainBloc>(context).add(GetUserList());
 
     super.initState();
 
-    _bloc?.add(GetUserList());
+    _bloc.add(GetUserList());
   }
 
   @override
@@ -31,69 +29,90 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Bloc POC'),
       ),
-      body: _bodyWidget(),
+      body: BodyWidget(bloc: _bloc),
     );
   }
+}
 
-  Widget _bodyWidget() {
+class BodyWidget extends StatelessWidget {
+  const BodyWidget({super.key, this.bloc});
+  final MainBloc? bloc;
+
+  @override
+  Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
-      bloc: _bloc,
+      bloc: bloc,
       listener: (context, state) {
         Fluttertoast.showToast(
-            msg: 'Click on view more button',
+          msg: 'Click on view more button',
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+        );
+        if (state is LoadedState && state.noMoreData) {
+          Fluttertoast.showToast(
+            msg: "No more data",
             backgroundColor: Colors.black,
             textColor: Colors.white,
-            toastLength: Toast.LENGTH_LONG);
+            toastLength: Toast.LENGTH_LONG,
+          );
+        }
       },
       builder: (context, state) {
-        if (state is LodedingState) {
+        if (state is LoadingState) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        if (state is LodedingFailedState) {
+        if (state is LoadingFailedState) {
           return const Center(child: Text("Error"));
         }
-        if (state is LodededState) {
-          List<Data> userList = state.data;
+
+        if (state is LoadedState) {
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
-                    itemCount: userList.length,
+                    itemCount: bloc?.userList.length,
                     itemBuilder: (_, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 8),
+                          vertical: 4,
+                          horizontal: 8,
+                        ),
                         child: Card(
                             color: Theme.of(context).primaryColor,
                             child: ListTile(
                                 title: Text(
-                                  '${userList[index].firstName}  ${userList[index].lastName}',
+                                  '${bloc?.userList[index].firstName}  ${bloc?.userList[index].lastName}',
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 subtitle: Text(
-                                  '${userList[index].email}',
+                                  '${bloc?.userList[index].email}',
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 leading: CircleAvatar(
                                   backgroundImage: NetworkImage(
-                                      userList[index].avatar.toString()),
+                                    bloc!.userList[index].avatar.toString(),
+                                  ),
                                 ))),
                       );
                     }),
               ),
               Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        _bloc?.add(ViewMoreButtonEvent());
-                      },
-                      child: Text('View More')))
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    bloc?.add(ViewMoreButtonEvent());
+                  },
+                  child: const Text('View More'),
+                ),
+              ),
             ],
           );
         }
+
         return Container();
       },
     );

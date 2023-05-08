@@ -5,10 +5,11 @@ import '../services/network_api_service.dart';
 class AuthRepository {
   final baseApiService = NetworkApiServices();
 
-  Future<UsersModels> userDataApi() async {
+  Future<UsersModels> userDataApi(int currentPage) async {
     try {
-      dynamic response = await baseApiService.getGetApiResponse(BASE_URL);
-      print(response);
+      dynamic response =
+          await baseApiService.getGetApiResponse("$BASE_URL?page=$currentPage");
+
       UsersModels model = UsersModels.fromJson(response);
       return model;
     } catch (e) {

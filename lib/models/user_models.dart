@@ -3,7 +3,7 @@ class UsersModels {
   int? perPage;
   int? total;
   int? totalPages;
-  List<Data>? data;
+  List<UserData>? data;
   Support? support;
 
   UsersModels(
@@ -20,41 +20,41 @@ class UsersModels {
     total = json['total'];
     totalPages = json['total_pages'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <UserData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(UserData.fromJson(v));
       });
     }
     support =
-        json['support'] != null ? new Support.fromJson(json['support']) : null;
+        json['support'] != null ? Support.fromJson(json['support']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['page'] = this.page;
-    data['per_page'] = this.perPage;
-    data['total'] = this.total;
-    data['total_pages'] = this.totalPages;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['page'] = page;
+    data['per_page'] = perPage;
+    data['total'] = total;
+    data['total_pages'] = totalPages;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    if (this.support != null) {
-      data['support'] = this.support!.toJson();
+    if (support != null) {
+      data['support'] = support!.toJson();
     }
     return data;
   }
 }
 
-class Data {
+class UserData {
   int? id;
   String? email;
   String? firstName;
   String? lastName;
   String? avatar;
 
-  Data({this.id, this.email, this.firstName, this.lastName, this.avatar});
+  UserData({this.id, this.email, this.firstName, this.lastName, this.avatar});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  UserData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     email = json['email'];
     firstName = json['first_name'];
@@ -63,12 +63,12 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['avatar'] = this.avatar;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['email'] = email;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['avatar'] = avatar;
     return data;
   }
 }
@@ -85,9 +85,9 @@ class Support {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['text'] = this.text;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['text'] = text;
     return data;
   }
 }

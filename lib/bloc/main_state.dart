@@ -8,14 +8,20 @@ abstract class MainState extends Equatable {
   List<Object?> get props => [];
 }
 
-class LodedingState extends MainState {}
+class LoadingState extends MainState {}
 
-class LodededState extends MainState {
-  final List<Data> data;
-  const LodededState(this.data);
+class LoadedState extends MainState {
+  final List<UserData> data;
+  final bool noMoreData;
+  const LoadedState(this.data, this.noMoreData);
 }
 
-class LodedingFailedState extends MainState {
+class LoadingFailedState extends MainState {
   final String? errorMsg;
-  const LodedingFailedState(this.errorMsg);
+  const LoadingFailedState(this.errorMsg);
+}
+
+class NoMoreDataState extends MainState {
+  final List<UserData> data;
+  const NoMoreDataState(this.data);
 }
