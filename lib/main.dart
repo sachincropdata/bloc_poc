@@ -1,4 +1,6 @@
 import 'package:bloc_mvvm_poc_app/bloc/main_bloc.dart';
+import 'package:bloc_mvvm_poc_app/router/app_router.dart';
+import 'package:bloc_mvvm_poc_app/ui/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,15 +16,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-      create: (context) => MainBloc(),
-        child:  MyHomePage(),
-      ),
-    );
+    final router = AppRouter().router;
+    return MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        routerConfig: router,
+        builder: ((context, child) {
+          return BlocProvider(
+            create: (context) => MainBloc(),
+            child: SecondScreen(),
+          );
+        }));
   }
-} 
+}
