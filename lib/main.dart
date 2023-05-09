@@ -1,7 +1,7 @@
-import 'package:bloc_mvvm_poc_app/bloc/main_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/main/main_bloc.dart';
 import 'config/router.dart';
 
 void main() {

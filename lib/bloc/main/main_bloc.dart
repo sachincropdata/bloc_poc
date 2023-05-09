@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/user_models.dart';
+import '../../models/user_models.dart';
 
 part 'main_event.dart';
 part 'main_state.dart';
