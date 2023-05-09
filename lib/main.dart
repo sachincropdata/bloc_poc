@@ -2,7 +2,7 @@ import 'package:bloc_mvvm_poc_app/bloc/main_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'ui/myhome_page.dart';
+import 'config/router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,15 +14,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BlocProvider(
+      builder: (context, child) => BlocProvider(
         create: (context) => MainBloc(),
-        child: const MyHomePage(),
+        child: child,
       ),
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }

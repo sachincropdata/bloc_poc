@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
+
 import 'dart:io';
 
+import 'package:bloc_mvvm_poc_app/common/constants.dart';
 import 'package:bloc_mvvm_poc_app/services/app_exception.dart';
 import 'package:http/http.dart' as http;
 
@@ -59,23 +60,25 @@ class NetworkApiServices extends BaseApiServices {
     switch (response.statusCode) {
       case 200:
         dynamic responseJson = jsonDecode(response.body);
-        log('\x1B[32msuccess: ${responseJson.toString()}\x1B[0m');
+        logger.i(responseJson.toString());
         return responseJson;
       case 400:
         dynamic responseJson = jsonDecode(response.body);
-        log('\x1B[31mbad request: ${responseJson.toString()}\x1B[0m');
+        logger.wtf('\x1B[31mbad request: ${responseJson.toString()}\x1B[0m');
         throw BadRequestException(response.body.toString());
       case 415:
         dynamic responseJson = jsonDecode(response.body);
-        log('\x1B[31munsupported media exception: ${responseJson.toString()}\x1B[0m');
+        logger.wtf(
+            '\x1B[31munsupported media exception: ${responseJson.toString()}\x1B[0m');
         throw UnSupportedMediaException(response.body.toString());
       case 403:
         dynamic responseJson = jsonDecode(response.body);
-        log('\x1B[31munauthorized request: ${responseJson.toString()}\x1B[0m');
+        logger.e(
+            '\x1B[31munauthorized request: ${responseJson.toString()}\x1B[0m');
         throw UnauthorisedException(response.body.toString());
       case 500:
       default:
-        log('\x1B[31mcould not fetch data: \x1B[0m');
+        logger.e('\x1B[31mcould not fetch data: \x1B[0m');
         throw FetchDataException('Error occured while communication with server'
             ' with status code : ${response.statusCode}');
     }

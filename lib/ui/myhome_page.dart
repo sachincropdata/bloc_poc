@@ -1,35 +1,21 @@
 import 'package:bloc_mvvm_poc_app/bloc/main_bloc.dart';
+import 'package:bloc_mvvm_poc_app/ui/user_info_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final MainBloc _bloc = MainBloc();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-
-    _bloc.add(GetUserList());
-  }
-
-  @override
   Widget build(BuildContext context) {
+    MainBloc bloc = MainBloc();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bloc POC'),
       ),
-      body: BodyWidget(bloc: _bloc),
+      body: BodyWidget(bloc: bloc),
     );
   }
 }
@@ -41,14 +27,16 @@ class BodyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
-      bloc: bloc,
+      bloc: bloc?..add(GetUserListEvent()),
       listener: (context, state) {
-        Fluttertoast.showToast(
-          msg: 'Click on view more button',
-          backgroundColor: Colors.black,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_LONG,
-        );
+        if (state is LoadingState) {
+          Fluttertoast.showToast(
+            msg: 'Click on view more button',
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_LONG,
+          );
+        }
         if (state is LoadedState && state.noMoreData) {
           Fluttertoast.showToast(
             msg: "No more data",
@@ -83,6 +71,12 @@ class BodyWidget extends StatelessWidget {
                         child: Card(
                             color: Theme.of(context).primaryColor,
                             child: ListTile(
+                                onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => UserInfoPage(
+                                            id: bloc?.userList[index].id ?? 1),
+                                      ),
+                                    ),
                                 title: Text(
                                   '${bloc?.userList[index].firstName}  ${bloc?.userList[index].lastName}',
                                   style: const TextStyle(color: Colors.white),

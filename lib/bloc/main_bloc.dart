@@ -17,20 +17,20 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   List<UserData> userList = [];
 
   MainBloc() : super(LoadingState()) {
-    on<GetUserList>((event, emit) async {
-      await _getUserByPage(currentPage);
+    on<GetUserListEvent>((event, emit) async {
+      await _getUserByPage(currentPage, emit);
     });
 
     on<ViewMoreButtonEvent>((event, emit) async {
       try {
-        _getUserByPage(currentPage);
+        await _getUserByPage(currentPage, emit);
       } catch (e) {
         emit(LoadingFailedState(e.toString()));
       }
     });
   }
 
-  Future<void> _getUserByPage(int page) async {
+  Future<void> _getUserByPage(int page, Emitter<MainState> emit) async {
     try {
       if (currentPage <= totalPages) {
         emit(LoadingState());
