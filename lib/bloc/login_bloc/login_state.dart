@@ -8,3 +8,9 @@ abstract class LoginBlocState extends Equatable {
 }
 
 class LoginBlocInitial extends LoginBlocState {}
+
+class LoginAuthenticatedState extends LoginBlocState {}
+
+class LoginUnAuthenticatedState extends LoginBlocState {}
+
+class LoginFailedState extends LoginBlocState {}

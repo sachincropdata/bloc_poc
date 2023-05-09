@@ -8,3 +8,7 @@ abstract class LoginBlocEvent extends Equatable {
 }
 
 class LoginSuccessEvent extends LoginBlocEvent {}
+
+class LoginInitialEvent extends LoginBlocEvent {}
+
+class LoginFailedEvent extends LoginBlocEvent {}

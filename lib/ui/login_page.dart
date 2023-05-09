@@ -2,65 +2,62 @@ import 'package:bloc_mvvm_poc_app/bloc/login_bloc/login_bloc.dart';
 import 'package:bloc_mvvm_poc_app/ui/widgets/medium_vertical_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 part 'widgets/login_page_text_field.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, this.bloc});
-  final LoginBloc? bloc;
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  late TextEditingController _emailController, _passController;
-  late GlobalKey<ScaffoldState> _formKey;
-
-  @override
-  void initState() {
-    _emailController = TextEditingController();
-    _passController = TextEditingController();
-    _formKey = GlobalKey<ScaffoldState>();
-    super.initState();
-  }
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<LoginBloc>();
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: BlocConsumer<LoginBloc, LoginBlocState>(
-          bloc: widget.bloc,
-          listener: (context, state) {
-            // TODO: @hrithikm2cd Add listener logic here.
-          },
-          builder: (context, state) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LoginPageTextField(
-                  controller: _emailController,
-                  hintText: "Email",
-                ),
-                const MediumVerticalSpacing(),
-                LoginPageTextField(
-                  controller: _passController,
-                  hintText: "Password",
-                ),
-                const MediumVerticalSpacing(),
-                ElevatedButton(
-                  onPressed: () => widget.bloc?.add(LoginSuccessEvent()),
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+      body: BlocConsumer<LoginBloc, LoginBlocState>(
+        bloc: bloc,
+        listener: (context, state) {
+          if (state is LoginAuthenticatedState) {
+            context.go('/home');
+          }
+          if (state is LoginFailedState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Login failed"),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Form(
+            key: bloc.formKey,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LoginPageTextField(
+                    controller: bloc.emailController,
+                    hintText: "Email",
                   ),
-                )
-              ],
+                  const MediumVerticalSpacing(),
+                  LoginPageTextField(
+                    controller: bloc.passController,
+                    hintText: "Password",
+                  ),
+                  const MediumVerticalSpacing(),
+                  ElevatedButton(
+                    onPressed: () => bloc.onLoginButtonTapped(),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
