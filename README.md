@@ -1,6 +1,6 @@
 # bloc_mvvm_poc_app
 
-A new Flutter project.
+A POC app to demonstrate the capabilites of BLoC .
 
 ## Getting Started
 
