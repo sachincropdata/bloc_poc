@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/connectivity_bloc/connectivity_bloc.dart';
 import 'bloc/login_bloc/login_bloc.dart';
+import 'bloc/main/main_bloc.dart';
 import 'config/router.dart';
 
 Future<void> main() async {
@@ -17,6 +18,9 @@ Future<void> main() async {
       ),
       BlocProvider<LoginBloc>(
         create: (context) => LoginBloc(),
+      ),
+      BlocProvider<MainBloc>(
+        create: (context) => MainBloc(),
       )
     ],
     child: const MyApp(),

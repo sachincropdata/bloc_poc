@@ -11,24 +11,23 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MainBloc bloc = MainBloc();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bloc POC'),
       ),
-      body: BodyWidget(bloc: bloc),
+      body: const BodyWidget(),
     );
   }
 }
 
 class BodyWidget extends StatelessWidget {
-  const BodyWidget({super.key, this.bloc});
-  final MainBloc? bloc;
+  const BodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<MainBloc>();
     return BlocConsumer<MainBloc, MainState>(
-      bloc: bloc?..add(GetUserListEvent()),
+      bloc: bloc..add(GetUserListEvent()),
       listener: (context, state) {
         if (state is LoadingState) {
           Fluttertoast.showToast(
@@ -62,7 +61,7 @@ class BodyWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: ListView.builder(
-                    itemCount: bloc?.userList.length,
+                    itemCount: bloc.userList.length,
                     itemBuilder: (_, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -75,20 +74,20 @@ class BodyWidget extends StatelessWidget {
                                 onTap: () => Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => UserInfoPage(
-                                            id: bloc?.userList[index].id ?? 1),
+                                            id: bloc.userList[index].id ?? 1),
                                       ),
                                     ),
                                 title: Text(
-                                  '${bloc?.userList[index].firstName}  ${bloc?.userList[index].lastName}',
+                                  '${bloc.userList[index].firstName}  ${bloc.userList[index].lastName}',
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 subtitle: Text(
-                                  '${bloc?.userList[index].email}',
+                                  '${bloc.userList[index].email}',
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 leading: CircleAvatar(
                                   backgroundImage: NetworkImage(
-                                    bloc!.userList[index].avatar.toString(),
+                                    bloc.userList[index].avatar.toString(),
                                   ),
                                 ))),
                       );
@@ -99,7 +98,7 @@ class BodyWidget extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    bloc?.add(ViewMoreButtonEvent());
+                    bloc.add(ViewMoreButtonEvent());
                   },
                   child: const Text('View More'),
                 ),
